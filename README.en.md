@@ -244,7 +244,7 @@ TempoLens is a **pure static app** — any static host works:
 Every push and PR runs on GitHub Actions (Ubuntu / Windows / macOS × Node 20/22 matrix):
 
 1. `node scripts/check-syntax.mjs` — full syntax check;
-2. `node --test test/` — unit tests;
+2. `node --test` — unit tests;
 3. `node scripts/build.mjs` — single-file bundle;
 4. `node scripts/smoke.mjs` — static server smoke test.
 

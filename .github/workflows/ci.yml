@@ -34,7 +34,7 @@ jobs:
         run: node scripts/check-syntax.mjs
 
       - name: Unit tests (node --test)
-        run: node --test test/
+        run: node --test
 
       - name: Build single-file bundle
         run: node scripts/build.mjs --out dist/tempolens.html

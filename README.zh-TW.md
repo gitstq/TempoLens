@@ -222,7 +222,7 @@ TempoLens 是**純靜態應用**，任何靜態託管都可以：
 每次推送與 PR 都會在 GitHub Actions 雲端執行（Ubuntu / Windows / macOS × Node 20/22 矩陣）：
 
 1. `node scripts/check-syntax.mjs` —— 全量語法校驗；
-2. `node --test test/` —— 單元測試；
+2. `node --test` —— 單元測試；
 3. `node scripts/build.mjs` —— 單檔案打包；
 4. `node scripts/smoke.mjs` —— 靜態伺服器冒煙測試。
 
