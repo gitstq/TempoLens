@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Node ${{ matrix.node }} · ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node: ['20', '22']
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Syntax check (node --check)
+        run: node scripts/check-syntax.mjs
+
+      - name: Unit tests (node --test)
+        run: node --test test/
+
+      - name: Build single-file bundle
+        run: node scripts/build.mjs --out dist/tempolens.html
+
+      - name: Smoke test (static server)
+        run: node scripts/smoke.mjs
+
+      - name: Upload bundle artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tempolens-bundle-${{ matrix.os }}-node${{ matrix.node }}
+          path: dist/tempolens.html
+          if-no-files-found: error
