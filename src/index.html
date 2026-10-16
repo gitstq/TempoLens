@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TempoLens — 零依赖节拍器与练习工作室</title>
+  <meta name="description" content="TempoLens: zero-dependency, offline-first browser metronome &amp; music practice studio. Polyrhythm, swing, smart tap tempo, tempo ladders, practice routines and stats.">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#0b0e14">
+  <meta property="og:title" content="TempoLens — Metronome &amp; Practice Studio">
+  <meta property="og:description" content="Zero-dependency, offline-first browser metronome with polyrhythm, swing, tap tempo, routines and stats.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c9eff' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M9 18V5l12-2v13'/%3E%3Ccircle cx='6' cy='18' r='3'/%3E%3Ccircle cx='18' cy='16' r='3'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容 / Skip to content</a>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" id="brand-icon" aria-hidden="true"></span>
+      <div class="brand-text">
+        <strong data-i18n="app.title">TempoLens</strong>
+        <small data-i18n="app.tagline">零依赖 · 可离线 · 本地优先的节拍器与练习工作室</small>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <label class="inline-field">
+        <span class="inline-field-label" data-i18n="nav.language">语言</span>
+        <select id="lang-select" aria-label="Language">
+          <option value="auto" data-i18n="theme.auto">跟随系统</option>
+          <option value="zh-CN">简体中文</option>
+          <option value="zh-TW">繁體中文</option>
+          <option value="en">English</option>
+        </select>
+      </label>
+      <label class="inline-field">
+        <span class="inline-field-label" data-i18n="nav.theme">主题</span>
+        <select id="theme-select" aria-label="Theme">
+          <option value="auto" data-i18n="theme.auto">跟随系统</option>
+          <option value="light" data-i18n="theme.light">浅色</option>
+          <option value="dark" data-i18n="theme.dark">深色</option>
+        </select>
+      </label>
+    </div>
+  </header>
+
+  <main id="main" class="layout">
+
+    <!-- 播放舞台 / transport stage -->
+    <section class="stage card" aria-label="Transport">
+      <div class="transport">
+        <button id="btn-play" class="btn btn-play" type="button" data-i18n-aria="aria.playButton">
+          <span class="btn-icon" id="icon-play" aria-hidden="true"></span>
+          <span class="btn-icon is-hidden" id="icon-stop" aria-hidden="true"></span>
+          <span class="btn-label" id="play-label" data-i18n="action.play">开始</span>
+        </button>
+        <button id="btn-tap" class="btn btn-tap" type="button" data-i18n-aria="aria.tapButton">
+          <span class="btn-icon" id="icon-tap" aria-hidden="true"></span>
+          <span class="btn-label" data-i18n="action.tap">打拍测速</span>
+        </button>
+        <div class="tempo-display">
+          <output id="bpm-value" for="bpm-slider">100</output>
+          <span class="tempo-unit">BPM</span>
+        </div>
+        <div class="tempo-controls">
+          <button id="btn-slower" class="btn btn-icon-only" type="button" data-i18n-aria="action.slower" aria-label="Slower"></button>
+          <input id="bpm-slider" class="slider" type="range" min="20" max="300" step="1" value="100"
+                 aria-label="Tempo (BPM)" data-i18n-aria="label.bpm">
+          <button id="btn-faster" class="btn btn-icon-only" type="button" data-i18n-aria="action.faster" aria-label="Faster"></button>
+          <input id="bpm-input" class="input input-bpm" type="number" min="20" max="300" step="1" value="100"
+                 aria-label="Tempo (BPM)" data-i18n-aria="label.bpm">
+        </div>
+      </div>
+      <div id="visualizer" class="visualizer" data-i18n-aria="aria.beatDots"></div>
+    </section>
+
+    <div class="grid">
+
+      <!-- 拍号与细分 / time & subdivision -->
+      <section class="card" id="card-time" aria-labelledby="card-time-title">
+        <h2 class="card-title" id="card-time-title"><span class="card-icon" data-icon="clock" aria-hidden="true"></span><span data-i18n="section.time">拍号与细分</span></h2>
+        <div class="field">
+          <label for="beats-per-bar" data-i18n="label.beatsPerBar">每小节拍数</label>
+          <select id="beats-per-bar" class="input">
+            <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+            <option value="4" selected>4</option><option value="5">5</option><option value="6">6</option>
+            <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+            <option value="12">12</option><option value="16">16</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="subdivision" data-i18n="label.subdivision">音符细分</label>
+          <select id="subdivision" class="input">
+            <option value="quarter" data-i18n="sub.quarter">四分音符</option>
+            <option value="eighth" data-i18n="sub.eighth">八分音符</option>
+            <option value="triplet" data-i18n="sub.triplet">三连音</option>
+            <option value="sixteenth" data-i18n="sub.sixteenth">十六分音符</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="swing"><span data-i18n="label.swing">摇摆（Swing）</span> <span class="field-value" id="swing-value">0%</span></label>
+          <input id="swing" class="slider" type="range" min="0" max="100" step="1" value="0">
+        </div>
+        <div class="field">
+          <label for="accent-mode" data-i18n="label.accent">重音模式</label>
+          <select id="accent-mode" class="input">
+            <option value="bar" data-i18n="accent.bar">每小节重音</option>
+            <option value="beat" data-i18n="accent.beat">每拍重音</option>
+            <option value="none" data-i18n="accent.none">无重音</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="count-in" data-i18n="label.countIn">预备拍</label>
+          <select id="count-in" class="input">
+            <option value="0" data-i18n="countin.0">关闭</option>
+            <option value="1" data-i18n="countin.1">1 小节</option>
+            <option value="2" data-i18n="countin.2">2 小节</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- 音色 / sound -->
+      <section class="card" id="card-sound" aria-labelledby="card-sound-title">
+        <h2 class="card-title" id="card-sound-title"><span class="card-icon" data-icon="volume" aria-hidden="true"></span><span data-i18n="section.sound">音色</span></h2>
+        <div class="field">
+          <label for="sound" data-i18n="label.sound">音色</label>
+          <select id="sound" class="input">
+            <option value="click" data-i18n="sound.click">电子咔哒</option>
+            <option value="wood" data-i18n="sound.wood">木鱼</option>
+            <option value="beep" data-i18n="sound.beep">正弦提示音</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="volume"><span data-i18n="label.volume">音量</span> <span class="field-value" id="volume-value">70%</span></label>
+          <input id="volume" class="slider" type="range" min="0" max="100" step="1" value="70">
+        </div>
+        <div class="field field-inline">
+          <input id="mute" type="checkbox" class="checkbox">
+          <label for="mute" data-i18n="label.mute">静音</label>
+        </div>
+        <p class="card-note" id="sound-note" data-i18n="sound.hint">全部音色由 Web Audio 实时合成，零音频素材。</p>
+      </section>
+
+      <!-- 复节奏 / polyrhythm -->
+      <section class="card" id="card-poly" aria-labelledby="card-poly-title">
+        <h2 class="card-title" id="card-poly-title"><span class="card-icon" data-icon="layers" aria-hidden="true"></span><span data-i18n="section.poly">复节奏</span></h2>
+        <div class="field field-inline">
+          <input id="poly-enable" type="checkbox" class="checkbox">
+          <label for="poly-enable" data-i18n="label.polyEnable">启用复节奏</label>
+        </div>
+        <div class="field">
+          <label for="poly-ratio" data-i18n="label.polyRatio">节奏比（如 3:2）</label>
+          <input id="poly-ratio" class="input" type="text" value="3:2" inputmode="text" maxlength="5"
+                 data-i18n-placeholder="label.polyRatio" disabled>
+        </div>
+        <div class="field">
+          <label for="poly-bpm" data-i18n="label.polyBpm">基准速度（留空跟随主速度）</label>
+          <input id="poly-bpm" class="input" type="number" min="20" max="300" step="1" placeholder="—" disabled>
+        </div>
+        <p class="card-note" id="poly-hint" data-i18n="poly.hint">两个声部以不同密度叠加播放，适合复合节奏训练。</p>
+        <p class="card-meta" id="poly-cycle" aria-live="polite"></p>
+      </section>
+
+      <!-- 练习例程 / routine -->
+      <section class="card card-wide" id="card-routine" aria-labelledby="card-routine-title">
+        <h2 class="card-title" id="card-routine-title"><span class="card-icon" data-icon="music" aria-hidden="true"></span><span data-i18n="section.routine">练习例程</span></h2>
+        <p class="card-note" data-i18n="routine.hint">按顺序自动播放多个步骤，到时间自动切换速度与拍号。</p>
+        <div class="field field-inline">
+          <label for="routine-name" data-i18n="label.routineName">例程名称</label>
+          <input id="routine-name" class="input" type="text" maxlength="80" value="我的练习">
+        </div>
+        <div class="routine-steps" id="routine-steps" role="list"></div>
+        <div class="routine-actions">
+          <button id="btn-add-step" class="btn" type="button"></button>
+          <button id="btn-start-routine" class="btn btn-primary" type="button"></button>
+          <button id="btn-export-routine" class="btn" type="button"></button>
+          <button id="btn-import-routine" class="btn" type="button"></button>
+          <input id="routine-file" type="file" accept="application/json,.json" class="visually-hidden">
+        </div>
+        <details class="ladder">
+          <summary><span data-i18n="action.tempoLadder">生成速度阶梯</span></summary>
+          <div class="ladder-grid">
+            <label><span data-i18n="label.ladderFrom">从</span><input id="ladder-from" class="input" type="number" min="20" max="300" value="60"></label>
+            <label><span data-i18n="label.ladderTo">到</span><input id="ladder-to" class="input" type="number" min="20" max="300" value="120"></label>
+            <label><span data-i18n="label.ladderStep">每级幅度</span><input id="ladder-step" class="input" type="number" min="1" max="50" value="5"></label>
+            <label><span data-i18n="label.ladderBars">每级小节</span><input id="ladder-bars" class="input" type="number" min="1" max="999" value="4"></label>
+          </div>
+          <button id="btn-ladder" class="btn" type="button"></button>
+        </details>
+        <p class="card-meta" id="routine-summary" aria-live="polite"></p>
+        <p class="card-meta card-status" id="routine-status" aria-live="polite"></p>
+      </section>
+
+      <!-- 练习统计 / stats -->
+      <section class="card" id="card-stats" aria-labelledby="card-stats-title">
+        <h2 class="card-title" id="card-stats-title"><span class="card-icon" data-icon="chart" aria-hidden="true"></span><span data-i18n="section.stats">练习统计</span></h2>
+        <div class="tiles">
+          <div class="tile"><span class="tile-label" data-i18n="stats.session">本次会话</span><span class="tile-value" id="stat-session-bars">0</span><span class="tile-unit" data-i18n="stats.bars">小节</span></div>
+          <div class="tile"><span class="tile-label" data-i18n="stats.time">时长</span><span class="tile-value" id="stat-session-time">0m</span><span class="tile-unit"></span></div>
+          <div class="tile"><span class="tile-label" data-i18n="stats.avgBpm">平均速度</span><span class="tile-value" id="stat-session-bpm">0</span><span class="tile-unit">BPM</span></div>
+          <div class="tile"><span class="tile-label" data-i18n="stats.today">今日练习</span><span class="tile-value" id="stat-today">0</span><span class="tile-unit" data-i18n="stats.bars">小节</span></div>
+          <div class="tile"><span class="tile-label" data-i18n="stats.totalBars">累计小节</span><span class="tile-value" id="stat-total-bars">0</span><span class="tile-unit"></span></div>
+          <div class="tile"><span class="tile-label" data-i18n="stats.totalTime">累计时长</span><span class="tile-value" id="stat-total-time">0m</span><span class="tile-unit"></span></div>
+          <div class="tile"><span class="tile-label" data-i18n="stats.streak">连续练习</span><span class="tile-value" id="stat-streak">0</span><span class="tile-unit" data-i18n="stats.unitDays">天</span></div>
+          <div class="tile"><span class="tile-label" data-i18n="stats.longest">最长连续</span><span class="tile-value" id="stat-longest">0</span><span class="tile-unit" data-i18n="stats.unitDays">天</span></div>
+          <div class="tile"><span class="tile-label" data-i18n="stats.days">练习天数</span><span class="tile-value" id="stat-days">0</span><span class="tile-unit" data-i18n="stats.unitDays">天</span></div>
+        </div>
+        <h3 class="card-subtitle" data-i18n="stats.heatmap">练习热力图</h3>
+        <div class="heatmap" id="heatmap" data-i18n-aria="aria.heatmap"></div>
+        <div class="heatmap-legend">
+          <span data-i18n="stats.less">少</span>
+          <span class="heatmap-cell" data-level="0"></span><span class="heatmap-cell" data-level="1"></span>
+          <span class="heatmap-cell" data-level="2"></span><span class="heatmap-cell" data-level="3"></span>
+          <span class="heatmap-cell" data-level="4"></span>
+          <span data-i18n="stats.more">多</span>
+        </div>
+        <button id="btn-clear-stats" class="btn btn-danger" type="button"></button>
+      </section>
+
+      <!-- 设置与分享 / settings & share -->
+      <section class="card" id="card-share" aria-labelledby="card-share-title">
+        <h2 class="card-title" id="card-share-title"><span class="card-icon" data-icon="settings" aria-hidden="true"></span><span data-i18n="section.share">设置与分享</span></h2>
+        <div class="field-stack">
+          <button id="btn-share" class="btn btn-primary" type="button"></button>
+          <button id="btn-export-settings" class="btn" type="button"></button>
+          <button id="btn-import-settings" class="btn" type="button"></button>
+          <input id="settings-file" type="file" accept="application/json,.json" class="visually-hidden">
+        </div>
+        <p class="card-note" data-i18n="share.hint">分享链接会编码当前全部设置，打开即用。</p>
+        <h3 class="card-subtitle" data-i18n="shortcuts.title">快捷键</h3>
+        <p class="card-note" id="shortcuts-list" data-i18n="shortcuts.list">空格 开始/停止 · T 打拍 · ↑/↓ 速度 ±1 · Shift+↑/↓ ±10 · M 静音 · 1-4 切换细分</p>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <span data-i18n="footer.license">基于 MIT 协议开源</span>
+    <span aria-hidden="true">·</span>
+    <span data-i18n="footer.zeroDep">零依赖 · 无构建 · 可离线</span>
+    <span aria-hidden="true">·</span>
+    <a href="https://github.com/gitstq/TempoLens" target="_blank" rel="noopener">GitHub</a>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="core/tempo.js"></script>
+  <script src="core/tap-tempo.js"></script>
+  <script src="core/scheduler.js"></script>
+  <script src="core/polyrhythm.js"></script>
+  <script src="core/routine.js"></script>
+  <script src="core/stats.js"></script>
+  <script src="core/settings.js"></script>
+  <script src="core/i18n.js"></script>
+  <script src="audio/click-engine.js"></script>
+  <script src="ui/icons.js"></script>
+  <script src="ui/dom.js"></script>
+  <script src="ui/visualizer.js"></script>
+  <script src="ui/transport.js"></script>
+  <script src="ui/routine-panel.js"></script>
+  <script src="ui/stats-panel.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
