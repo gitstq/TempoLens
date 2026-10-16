@@ -1,0 +1,42 @@
+{
+  "name": "tempolens",
+  "version": "1.0.0",
+  "description": "TempoLens — zero-dependency, offline-first browser metronome & music practice studio (polyrhythm, swing, tap tempo, tempo ladders, routines, stats).",
+  "keywords": [
+    "metronome",
+    "music",
+    "practice",
+    "polyrhythm",
+    "swing",
+    "tap-tempo",
+    "offline",
+    "zero-dependency",
+    "web-audio",
+    "vanilla-js"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/gitstq/TempoLens",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gitstq/TempoLens.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gitstq/TempoLens/issues"
+  },
+  "engines": {
+    "node": ">=18.17"
+  },
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "test": "node --test test/",
+    "check": "node scripts/check-syntax.mjs",
+    "build": "node scripts/build.mjs",
+    "smoke": "node scripts/smoke.mjs",
+    "verify": "npm run check && npm test && npm run build && npm run smoke"
+  },
+  "files": [
+    "src/",
+    "scripts/",
+    "test/"
+  ]
+}
