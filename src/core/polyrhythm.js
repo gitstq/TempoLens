@@ -55,9 +55,9 @@
 
   /** 默认循环时长（毫秒）/ default cycle length in ms */
   function defaultCycleMs(a, b, bpm) {
-    var b = Number(bpm);
-    if (!isFinite(b) || b <= 0) { throw new RangeError('bpm must be positive'); }
-    return cycleBeats(a, b) * (60000 / b);
+    var tempoValue = Number(bpm);
+    if (!isFinite(tempoValue) || tempoValue <= 0) { throw new RangeError('bpm must be positive'); }
+    return cycleBeats(a, b) * (60000 / tempoValue);
   }
 
   /**

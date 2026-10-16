@@ -28,8 +28,18 @@ test('planClicks subdivides beats', () => {
   assert.equal(plan.events[1].sub, 1);
   assert.equal(plan.events[1].accent, false);
   assert.equal(plan.events[2].sub, 0);
-  assert.equal(plan.events[2].accent, true); // 第二小节强拍 / bar 2 downbeat
-  assert.equal(plan.events[2].bar, 2);
+  assert.equal(plan.events[2].accent, false); // 第 2 拍不是强拍 / beat 2 is not accented
+  assert.equal(plan.events[2].bar, 1);
+  assert.equal(plan.events[2].beatInBar, 2);
+
+  // 下一小节强拍 / the next bar downbeat (beat 4 @ 2000ms)
+  const next = planClicks({ startTime: 0, untilTime: 2001, bpm: 120, beatsPerBar: 4, subdivision: 'eighth' });
+  assert.equal(next.events.length, 9); // 0 .. 2000
+  assert.ok(near(next.events[8].time, 2000));
+  assert.equal(next.events[8].bar, 2);
+  assert.equal(next.events[8].beatInBar, 1);
+  assert.equal(next.events[8].accent, true);
+  assert.equal(next.events[8].downbeat, true);
 });
 
 test('planClicks applies swing to off-beats', () => {
